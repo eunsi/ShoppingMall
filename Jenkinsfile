@@ -14,7 +14,7 @@ pipeline {
         stage("Push image to gcr") {
             steps {
                 script {
-                    docker.withRegistry('https://asia.gcr.io', 'gcr:exemplary-datum-362307') {
+                        docker.withRegistry('https://asia.gcr.io', 'gcr:exemplary-datum-362307') {
                         app.push("${env.BUILD_NUMBER}")
                     }
                 }

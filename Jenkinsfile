@@ -6,7 +6,7 @@ pipeline {
         stage('Build image') {
             steps {
                 script {
-                    app = docker.build("terraform-tae/goods")
+                    app = docker.build("exemplary-datum-362307/goods")
                 }
             }
         }
@@ -14,7 +14,7 @@ pipeline {
         stage("Push image to gcr") {
             steps {
                 script {
-                    docker.withRegistry('https://asia.gcr.io', 'gcr:terraform-tae') {
+                    docker.withRegistry('https://asia.gcr.io', 'gcr:exemplary-datum-362307') {
                         app.push("${env.BUILD_NUMBER}")
                     }
                 }
@@ -25,15 +25,15 @@ pipeline {
 
             steps {
 
-                git credentialsId: 'XOXOT',
-                    url: 'https://github.com/XOXOT/argoCD_yaml.git',
+                git credentialsId: 'jenkins',
+                    url: 'https://github.com/eunsi/argo_gogleshop.git',
                     branch: 'main'
 
                 sh "sed -i 's/goods:.*\$/goods:${env.BUILD_NUMBER}/g' deploy_goods.yaml"
                 sh "git add deploy_goods.yaml"
                 sh "git commit -m '[UPDATE] goods ${env.BUILD_NUMBER} image versioning'"
 
-                withCredentials([gitUsernamePassword(credentialsId: 'XOXOT')]) {
+                withCredentials([gitUsernamePassword(credentialsId: 'jenkins')]) {
                     sh "git push -u origin main"
                 }
             }
